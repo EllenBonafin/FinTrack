@@ -7,7 +7,7 @@ import MonthlyBarChart from "./MonthlyBarChart";
 import CategoryPieChart from "./CategoryPieChart";
 import RecentTransactions from "./RecentTransactions";
 import AlertBanner from "./AlertBanner";
-import { mockAlerts } from "@/lib/mockData";
+import { useAlerts } from "@/hooks/useAlerts";
 
 const now = new Date();
 
@@ -16,6 +16,7 @@ export default function DashboardView() {
   const [year]  = useState(now.getFullYear());
 
   const { summary, monthly, loading, error } = useDashboard(month, year);
+  const { alerts } = useAlerts(month, year);
 
   if (loading) {
     return (
@@ -43,8 +44,7 @@ export default function DashboardView() {
         </p>
       </div>
 
-      {/* Alertas ainda usam mock — serão conectados na etapa de Alertas */}
-      <AlertBanner alerts={mockAlerts} />
+      <AlertBanner alerts={alerts} />
 
       <BalanceCard
         balance={summary.balance}

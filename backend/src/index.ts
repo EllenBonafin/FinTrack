@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import authRoutes from "./routes/authRoutes";
 import transactionRoutes from "./routes/transactionRoutes";
+import alertRoutes from "./routes/alertRoutes";
 
 const app = express();
 const PORT = process.env.PORT ?? 3001;
@@ -18,6 +19,7 @@ app.get("/health", (_req, res) => {
 // Routes
 app.use("/auth", authRoutes);
 app.use("/transactions", transactionRoutes);
+app.use("/alerts", alertRoutes);
 
 // Only start listening when this file is the entry point, not when imported by tests
 if (require.main === module) {
