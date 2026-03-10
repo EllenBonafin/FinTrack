@@ -66,6 +66,36 @@ export async function deleteTransaction(req: AuthRequest, res: Response): Promis
   res.status(204).send();
 }
 
+export async function getMonthlyChart(req: AuthRequest, res: Response): Promise<void> {
+  const userId = req.user!.userId;
+  const year = Number(req.query.year ?? new Date().getFullYear());
+
+  const transactions = await prisma.transaction.findMany({
+    where: {
+      userId,
+      date: {
+        gte: new Date(year, 0, 1),
+        lte: new Date(year, 11, 31, 23, 59, 59),
+      },
+    },
+  });
+
+  // Agrega receita e despesa por mês (índice 0 = janeiro)
+  const monthly = Array.from({ length: 12 }, (_, i) => ({
+    month: i + 1,
+    income: 0,
+    expense: 0,
+  }));
+
+  for (const tx of transactions) {
+    const idx = new Date(tx.date).getMonth();
+    if (tx.type === "INCOME") monthly[idx].income += Number(tx.amount);
+    else monthly[idx].expense += Number(tx.amount);
+  }
+
+  res.json(monthly);
+}
+
 export async function getDashboardSummary(req: AuthRequest, res: Response): Promise<void> {
   const userId = req.user!.userId;
   const now = new Date();

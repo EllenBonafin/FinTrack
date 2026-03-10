@@ -5,6 +5,7 @@ import {
   createTransaction,
   deleteTransaction,
   getDashboardSummary,
+  getMonthlyChart,
 } from "../controllers/transactionController";
 
 const router = Router();
@@ -22,5 +23,8 @@ router.delete("/:id", deleteTransaction);
 
 // GET /transactions/summary
 router.get("/summary", getDashboardSummary);
+
+// GET /transactions/monthly-chart
+router.get("/monthly-chart", getMonthlyChart);
 
 export default router;
